@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+*.sublime-workspace
+.DS_STORE
+node_modules

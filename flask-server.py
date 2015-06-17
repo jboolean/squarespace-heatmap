@@ -4,7 +4,7 @@ import gridfs
 
 import json
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='dist')
 
 client = MongoClient()
 client = MongoClient('localhost', 27017)

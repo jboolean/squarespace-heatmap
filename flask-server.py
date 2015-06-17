@@ -22,10 +22,10 @@ def signal():
             print db.hovers
             post = {'clicks': request.form[value]}
             print post
-            #clicks.insert_one(post)
-            #db.clicks.insert_one()
-        print clicks.find_one()
+            print db.clicks.insert_one(post).inserted_id
+            print "continuation"
     else:
+        print db.clicks.find_one()
         print request.form
 
 

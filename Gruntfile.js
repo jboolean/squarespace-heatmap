@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     browserify: {
       build: {
         files: {
-          'dist/tracker.js': 'lib/tracker.js'
+          'dist/reporter.js': 'lib/reporter.js'
         }
       }
     }

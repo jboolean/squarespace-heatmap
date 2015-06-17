@@ -1,0 +1,32 @@
+{
+  "name": "squarespace-heatmap",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jboolean/squarespace-heatmap",
+  "authors": [
+    "aborai",
+    "amarutabuge",
+    "jboolean"
+  ],
+  "description": "Heatmaps for Squarespace sites.",
+  "main": "dist/scripts/reporter.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "heatmaps",
+    "analytics",
+    "squarespace"
+  ],
+  "license": "Commercial",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.13.3",
+    "lodash": "~3.9.3"
+  }
+}

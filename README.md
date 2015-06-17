@@ -5,7 +5,7 @@
 3. install Flask-PyMongo. This will install flask and pymongo
 
 ### Install the build system
-`npm install grunt-cli`
+`npm install grunt-cli debowerify`
 
 
 ## Building

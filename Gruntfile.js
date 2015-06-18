@@ -15,6 +15,11 @@ module.exports = function(grunt) {
         files: {
           'dist/scripts/reporter.js': 'lib/reporter.js'
         }
+      },
+      buildFrontend: {
+        files: {
+          'dist/scripts/frontend.js': 'lib/frontend.js'
+        }
       }
     },
     less: {

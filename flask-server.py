@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from bson.son import SON
 import gridfs
 import pymongo
-
+import ast
 import json
 
 app = Flask(__name__, static_folder='dist')
@@ -28,14 +28,19 @@ def signal():
 
 
 def mongo_save(request):
+    print request.form
     for value in request.form:
 
         data = request.form[value].encode('ascii','ignore')
-        clickCount, hoverCount = eval(data)
 
+        clickCount, hoverCount = ast.literal_eval(data)
+
+        print clickCount, hoverCount
+        
         sendClicks = {"name" : value, "value": clickCount}
         sendHovers = {"name" : value, "value": hoverCount}
-        oldVal = db.clicks.find_one{{"name": value}}
+        #oldVal = db.clicks.find_one({"name": value})
+        db.clicks.save(sendClicks)
         db.hovers.save(sendHovers)
 
     print "saved"
@@ -43,7 +48,7 @@ def mongo_save(request):
 
 def mongo_get(request):
     print request.args
-    for value in reest.args:
+    for value in request.args:
         print value
         print request.args[value]
         data = request.args[value].encode('ascii','ignore')

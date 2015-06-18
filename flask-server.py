@@ -36,12 +36,28 @@ def mongo_save(request):
         clickCount, hoverCount = ast.literal_eval(data)
 
         print clickCount, hoverCount
-        
+        if clickCount == 0:
+            return "saved"
+        if hoverCount == 0:
+            return "saved"
+
+        if db.clicks.find_one({"name": value}) != None:
+            print "CLICKS NOT UNIQUE"
+            print db.clicks.find_one({"name": value})
+            db.clicks.find_one_and_update({"name": value}, {'$inc': {'value': clickCount}})
+            return "saved"
+        if db.hovers.find_one({"name": value}) != None:
+            print "HOVERS NOT UNIQUE"
+            #print db.clicks.find_one({"name": value})
+            db.clicks.find_one_and_update({"name": value}, {'$inc': {'value': hoverCount}})
+            return "saved"
+
         sendClicks = {"name" : value, "value": clickCount}
         sendHovers = {"name" : value, "value": hoverCount}
         #oldVal = db.clicks.find_one({"name": value})
         db.clicks.save(sendClicks)
         db.hovers.save(sendHovers)
+        clickCount, hoverCount = 0,0
 
     print "saved"
     return "saved"
@@ -53,7 +69,7 @@ def mongo_get(request):
         print request.args[value]
         data = request.args[value].encode('ascii','ignore')
         if "clicks" in data:
-            list(db.clicks.find({"name": value}))
+            print list(db.clicks.find({"name": value}))
 
         if "hovers" in data:
             print value, list(db.hovers.find({"name": value}))

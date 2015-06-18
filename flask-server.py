@@ -43,7 +43,7 @@ def mongo_save(request):
 
 def mongo_get(request):
     print request.args
-    for value in request.args:
+    for value in reest.args:
         print value
         print request.args[value]
         data = request.args[value].encode('ascii','ignore')

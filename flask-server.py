@@ -1,5 +1,6 @@
 from flask import Flask, request
 from pymongo import MongoClient
+from bson.son import SON
 import gridfs
 import pymongo
 
@@ -34,8 +35,7 @@ def mongo_save(request):
 
         sendClicks = {"name" : value, "value": clickCount}
         sendHovers = {"name" : value, "value": hoverCount}
-
-        db.clicks.save(sendClicks)
+        oldVal = db.clicks.find_one{{"name": value}}
         db.hovers.save(sendHovers)
 
     print "saved"
@@ -48,7 +48,8 @@ def mongo_get(request):
         print request.args[value]
         data = request.args[value].encode('ascii','ignore')
         if "clicks" in data:
-            print value, list(db.clicks.find({"name": value}))
+            list(db.clicks.find({"name": value}))
+
         if "hovers" in data:
             print value, list(db.hovers.find({"name": value}))
         #print mongo.find(value)

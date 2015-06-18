@@ -23,7 +23,7 @@ def signal():
         mongo_save(request)
     else:
         print "GET"
-        mongo_get(request)
+        print mongo_get(request)
     return "done"
 
 
@@ -65,14 +65,15 @@ def mongo_save(request):
 def mongo_get(request):
     print request.args
     for value in request.args:
-        print value
-        print request.args[value]
         data = request.args[value].encode('ascii','ignore')
         if "clicks" in data:
-            print list(db.clicks.find({"name": value}))
+            requested = db.clicks.find_one({"name": value})
+            return requested["value"]
 
         if "hovers" in data:
-            print value, list(db.hovers.find({"name": value}))
+            requested = db.hovers.find_one({"name": value})
+            return requested["value"]
+        return "improper request"
         #print mongo.find(value)
 
     return "none"

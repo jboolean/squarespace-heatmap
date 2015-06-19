@@ -21,6 +21,7 @@ body {
 #pageView {
   flex-grow: 1;
   border: none;
+  opacity: 0.3;
 }
 
 #indicators {
@@ -28,11 +29,27 @@ body {
   // overflow: scroll;
   // width: calc(100% - 20px);
   height: 10000000px;
+  z-index: 1;
+}
+
+.wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 200px;
+  margin-left: -100px;
+  margin-top: -10px;
 }
 
 .indicator {
-  position: absolute;
   width: 12px;
   height: 12px;
   // background-color: red;
+}
+
+.clicksonhover {
+
+  // position: absolute;
+  // text-align: center;
 }

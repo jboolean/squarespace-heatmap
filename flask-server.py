@@ -70,12 +70,14 @@ def mongo_get(request):
         vals = {}
         if "clicks" in data:
             requested = db.clicks.find_one({"name": value})
-            vals["clicks"] = requested["value"]
+            if requested != None:
+                vals["clicks"] = requested["value"]
 
         if "hovers" in data:
             print "hovers"
             requested = db.hovers.find_one({"name": value})
-            vals["hovers"] = requested["value"]
+            if request != None:
+                vals["hovers"] = requested["value"]
         requestedVals[value] = vals
     return requestedVals
 

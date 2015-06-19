@@ -76,7 +76,7 @@ def mongo_get(request):
         if "hovers" in data:
             print "hovers"
             requested = db.hovers.find_one({"name": value})
-            if request != None:
+            if requested != None:
                 vals["hovers"] = requested["value"]
         requestedVals[value] = vals
     return requestedVals

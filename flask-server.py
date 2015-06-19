@@ -52,7 +52,7 @@ def mongo_save(request):
         #oldVal = db.clicks.find_one({"name": value})
         print unique
         if unique :
-            
+
             db.clicks.insert_one(sendClicks)
             if hoverCount > 500:
                 db.hovers.insert_one(sendHovers)
@@ -87,7 +87,9 @@ def mongo_get(request):
         print data
         vals = {}
         if "clicks" in data:
-            requested = db.clicks.find_one({"_id": value})
+            print "clicks"
+            requested = db.clicks.find_one({"name": value})
+            print requested
             if requested != None:
                 vals["clicks"] = requested["value"]
 

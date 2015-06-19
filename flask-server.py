@@ -42,7 +42,8 @@ def mongo_save(request):
             print "ENTERED CLICKS"
             check_click_unique(value, clickCount)
             unique = False
-        if db.hovers.find_one({"name": value}) != None and hoverCount > 0:
+        if db.hovers.find_one({"name": value}) != None:
+            print "ENTERED HOVERS"
             check_hover_unique(value, hoverCount)
             unique = False
 
@@ -54,8 +55,7 @@ def mongo_save(request):
         if unique :
 
             db.clicks.insert_one(sendClicks)
-            if hoverCount > 500:
-                db.hovers.insert_one(sendHovers)
+            db.hovers.insert_one(sendHovers)
 
     print "saved"
     return ("saved", 200, ["Access-Control-Allow-Origin: *"])
@@ -74,7 +74,7 @@ def check_hover_unique(value, hoverCount):
     print data["value"]
     oldVal = data["value"]
     print hoverCount
-    newVal = (hoverCount + oldVal) / (div + 1)
+    newVal = hoverCount + oldVal
     print newVal
     db.hovers.find_one_and_update({"name": value}, {'$set': {'value': newVal}, '$inc': {'count': 1}})
 
@@ -102,4 +102,4 @@ def mongo_get(request):
     return requestedVals
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port = 5000)

@@ -30,28 +30,32 @@ def signal():
 def mongo_save(request):
     print request.form
     for value in request.form:
-        unique = False
+        unique = True
         data = request.form[value].encode('ascii','ignore')
 
         clickCount, hoverCount = ast.literal_eval(data)
-        print data
         print clickCount, hoverCount
 
-        if db.clicks.find_one({"name": value}) != None and clickCount > 0:
+        print "clickData: " + str(db.clicks.find_one({"name": value}))
+
+        if db.clicks.find_one({"name": value}) != None:
+            print "ENTERED CLICKS"
             check_click_unique(value, clickCount)
-            unique = True
+            unique = False
         if db.hovers.find_one({"name": value}) != None and hoverCount > 0:
             check_hover_unique(value, hoverCount)
-            unique = True
+            unique = False
 
-
+        print "presend: " + str(clickCount)
         sendClicks = {"name" : value, "value": clickCount}
         sendHovers = {"name" : value, "value": hoverCount, "count": 1}
         #oldVal = db.clicks.find_one({"name": value})
-        if not unique and (clickCount > 0 or hoverCount > 1000):
+        print unique
+        if unique :
+            
             db.clicks.insert_one(sendClicks)
-            db.hovers.insert_one(sendHovers)
-        clickCount, hoverCount = 0,0
+            if hoverCount > 500:
+                db.hovers.insert_one(sendHovers)
 
     print "saved"
     return ("saved", 200, ["Access-Control-Allow-Origin: *"])

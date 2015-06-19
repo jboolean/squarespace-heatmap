@@ -30,29 +30,28 @@ def signal():
 def mongo_save(request):
     print request.form
     for value in request.form:
-
+        unique = False
         data = request.form[value].encode('ascii','ignore')
 
         clickCount, hoverCount = ast.literal_eval(data)
         print data
         print clickCount, hoverCount
-        if clickCount == 0:
-            return "saved"
-        if hoverCount == 0:
-            return "saved"
 
-        if db.clicks.find_one({"name": value}) != None:
+        if db.clicks.find_one({"name": value}) != None and clickCount > 0:
             check_click_unique(value, clickCount)
-        if db.hovers.find_one({"name": value}) != None:
+            unique = True
+        if db.hovers.find_one({"name": value}) != None and hoverCount > 0:
             check_hover_unique(value, hoverCount)
+            unique = True
+
 
         sendClicks = {"name" : value, "value": clickCount}
-        sendHovers = {"name" : value, "value": hoverCount}
+        sendHovers = {"name" : value, "value": hoverCount, "count": 1}
         #oldVal = db.clicks.find_one({"name": value})
-        db.clicks.insert_one(sendClicks)
-        db.hovers.insert_one(sendHovers)
+        if not unique and (clickCount > 0 or hoverCount > 1000):
+            db.clicks.insert_one(sendClicks)
+            db.hovers.insert_one(sendHovers)
         clickCount, hoverCount = 0,0
-    headers = {}
 
     print "saved"
     return ("saved", 200, ["Access-Control-Allow-Origin: *"])
@@ -65,7 +64,16 @@ def check_click_unique(value, clickCount):
 
 def check_hover_unique(value, hoverCount):
     print "HOVERS NOT UNIQUE"
-    db.hovers.find_one_and_update({"name": value}, {'$inc': {'value': hoverCount}})
+    data = db.hovers.find_one({"name": value})
+    print data["count"]
+    div = data["count"]
+    print data["value"]
+    oldVal = data["value"]
+    print hoverCount
+    newVal = (hoverCount + oldVal) / (div + 1)
+    print newVal
+    db.hovers.find_one_and_update({"name": value}, {'$set': {'value': newVal}, '$inc': {'count': 1}})
+
     return "saved"
 
 def mongo_get(request):
@@ -75,7 +83,7 @@ def mongo_get(request):
         print data
         vals = {}
         if "clicks" in data:
-            requested = db.clicks.find_one({"name": value})
+            requested = db.clicks.find_one({"_id": value})
             if requested != None:
                 vals["clicks"] = requested["value"]
 

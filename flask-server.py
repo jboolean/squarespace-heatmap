@@ -34,7 +34,7 @@ def mongo_save(request):
         data = request.form[value].encode('ascii','ignore')
 
         clickCount, hoverCount = ast.literal_eval(data)
-
+        print data
         print clickCount, hoverCount
         if clickCount == 0:
             return "saved"
@@ -42,26 +42,31 @@ def mongo_save(request):
             return "saved"
 
         if db.clicks.find_one({"name": value}) != None:
-            print "CLICKS NOT UNIQUE"
-            print db.clicks.find_one({"name": value})
-            db.clicks.find_one_and_update({"name": value}, {'$inc': {'value': clickCount}})
-            return "saved"
+            check_click_unique(value, clickCount)
         if db.hovers.find_one({"name": value}) != None:
-            print "HOVERS NOT UNIQUE"
-            #print db.clicks.find_one({"name": value})
-            db.clicks.find_one_and_update({"name": value}, {'$inc': {'value': hoverCount}})
-            return "saved"
+            check_hover_unique(value, hoverCount)
 
         sendClicks = {"name" : value, "value": clickCount}
         sendHovers = {"name" : value, "value": hoverCount}
         #oldVal = db.clicks.find_one({"name": value})
-        db.clicks.save(sendClicks)
-        db.hovers.save(sendHovers)
+        db.clicks.insert_one(sendClicks)
+        db.hovers.insert_one(sendHovers)
         clickCount, hoverCount = 0,0
     headers = {}
 
     print "saved"
     return ("saved", 200, ["Access-Control-Allow-Origin: *"])
+
+def check_click_unique(value, clickCount):
+    print "CLICKS NOT UNIQUE"
+    print db.clicks.find_one({"name": value})
+    db.clicks.find_one_and_update({"name": value}, {'$inc': {'value': clickCount}})
+    return "saved"
+
+def check_hover_unique(value, hoverCount):
+    print "HOVERS NOT UNIQUE"
+    db.hovers.find_one_and_update({"name": value}, {'$inc': {'value': hoverCount}})
+    return "saved"
 
 def mongo_get(request):
     requestedVals = {}

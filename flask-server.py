@@ -58,6 +58,7 @@ def mongo_save(request):
         db.clicks.save(sendClicks)
         db.hovers.save(sendHovers)
         clickCount, hoverCount = 0,0
+    headers = {}
 
     print "saved"
     return ("saved", 200, ["Access-Control-Allow-Origin: *"])

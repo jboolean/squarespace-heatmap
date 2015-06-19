@@ -60,7 +60,7 @@ def mongo_save(request):
         clickCount, hoverCount = 0,0
 
     print "saved"
-    return "saved"
+    return ("saved", 200, ["Access-Control-Allow-Origin: *"])
 
 def mongo_get(request):
     print request.args

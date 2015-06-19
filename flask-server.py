@@ -16,15 +16,15 @@ hovers = db['hovers']
 
 @app.route('/', methods = ['GET','POST'])
 def signal():
-
     if request.method == 'POST':
 
         print "POST"
         mongo_save(request)
+        return "POSTED"
     else:
         print "GET"
-        print mongo_get(request)
-    return "done"
+        return str(json.dumps(mongo_get(request)))
+
 
 
 def mongo_save(request):
@@ -63,20 +63,21 @@ def mongo_save(request):
     return "saved"
 
 def mongo_get(request):
-    print request.args
+    requestedVals = {}
     for value in request.args:
-        data = request.args[value].encode('ascii','ignore')
+        data = request.args.getlist(value)
+        print data
+        vals = {}
         if "clicks" in data:
             requested = db.clicks.find_one({"name": value})
-            return requested["value"]
+            vals["clicks"] = requested["value"]
 
         if "hovers" in data:
+            print "hovers"
             requested = db.hovers.find_one({"name": value})
-            return requested["value"]
-        return "improper request"
-        #print mongo.find(value)
-
-    return "none"
+            vals["hovers"] = requested["value"]
+        requestedVals[value] = vals
+    return requestedVals
 
 if __name__ == '__main__':
     app.run(debug=True)
